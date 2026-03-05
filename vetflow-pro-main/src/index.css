@@ -158,6 +158,27 @@
 }
 
 @layer utilities {
+  .ios-dvh {
+    height: 100svh;
+    min-height: -webkit-fill-available;
+  }
+  .min-h-ios-dvh {
+    min-height: 100svh;
+    min-height: -webkit-fill-available;
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .touch-smooth {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .tap-transparent {
+    -webkit-tap-highlight-color: transparent;
+  }
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-sage-dark;
   }
@@ -228,6 +249,20 @@
 
   .animate-float {
     animation: float 4s ease-in-out infinite;
+  }
+
+  /* Jump animation */
+  @keyframes jump {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .animate-jump {
+    animation: jump 2s ease-in-out infinite;
   }
 
   /* Pulse glow */
@@ -341,4 +376,213 @@
       0 0 6px hsl(var(--primary) / 0.6),
       0 0 14px hsl(var(--primary) / 0.3);
   }
+
+  .text-outline-white {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+    text-stroke: 1px rgba(255, 255, 255, 0.4);
+  }
+
+  /* Eye glow overlay for splash intro */
+  .eye-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(var(--eye-size, 160px) circle at var(--eye-left-x, 45%) var(--eye-left-y, 42%), hsl(var(--primary) / 0.35), transparent 60%),
+      radial-gradient(var(--eye-size, 160px) circle at var(--eye-right-x, 57%) var(--eye-right-y, 42%), hsl(var(--primary) / 0.35), transparent 60%);
+    mix-blend-mode: screen;
+    filter: saturate(1.15) contrast(1.05);
+  }
+
+  /* Smoke overlay following scroll */
+  @keyframes smoke-drift {
+    0% { transform: translate3d(0,0,0); }
+    50% { transform: translate3d(0,-6px,0); }
+    100% { transform: translate3d(0,0,0); }
+  }
+  .smoke-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(600px circle at 20% 40%, rgba(255,255,255,0.12), transparent 60%),
+      radial-gradient(700px circle at 80% 35%, rgba(255,255,255,0.10), transparent 65%),
+      radial-gradient(900px circle at 50% 70%, rgba(255,255,255,0.08), transparent 70%);
+    mix-blend-mode: screen;
+    filter: blur(10px);
+    opacity: 0.22;
+    animation: smoke-drift 8s ease-in-out infinite;
+  }
+  /* Elements reveal with smoke */
+  .smoke-reveal {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(20px);
+    will-change: opacity, filter, transform;
+  }
+}
+
+/* Snowball Loading Spinner */
+.pl {
+	--uib-size: 80px;
+	--uib-color: hsl(var(--gold));
+	--uib-bg-color: hsl(var(--charcoal));
+	--uib-speed: 2s;
+	--uib-ring-size: 10px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--uib-size);
+	width: var(--uib-size);
+}
+
+.pl__outer-ring {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	border: var(--uib-ring-size) solid var(--uib-color);
+	border-radius: 50%;
+	opacity: 0.2;
+}
+
+.pl__inner-ring {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 100%;
+	border: var(--uib-ring-size) solid var(--uib-color);
+	border-radius: 50%;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	animation: trackCover var(--uib-speed) ease-in-out infinite;
+}
+
+.pl__track-cover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	border: var(--uib-ring-size) solid var(--uib-bg-color);
+	border-radius: 50%;
+	border-top-color: transparent;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	animation: trackCover var(--uib-speed) linear infinite;
+	transform: rotate(45deg);
+}
+
+.pl__ball {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	animation: ball var(--uib-speed) ease-in-out infinite;
+}
+
+.pl__ball-texture {
+	position: absolute;
+	top: calc(50% - var(--uib-ring-size) / 2);
+	left: calc(50% - var(--uib-ring-size) / 2);
+	height: var(--uib-ring-size);
+	width: var(--uib-ring-size);
+	background-color: var(--uib-color);
+	border-radius: 50%;
+}
+
+.pl__ball-outer-shadow {
+	position: absolute;
+	top: calc(50% - var(--uib-ring-size));
+	left: calc(50% - var(--uib-ring-size));
+	height: calc(var(--uib-ring-size) * 2);
+	width: calc(var(--uib-ring-size) * 2);
+	background-color: var(--uib-color);
+	border-radius: 50%;
+	filter: blur(calc(var(--uib-ring-size) * 0.5));
+	opacity: 0.5;
+	animation: ballOuterShadow var(--uib-speed) ease-in-out infinite;
+}
+
+.pl__ball-inner-shadow {
+	position: absolute;
+	top: calc(50% - var(--uib-ring-size) / 2);
+	left: calc(50% - var(--uib-ring-size) / 2);
+	height: var(--uib-ring-size);
+	width: var(--uib-ring-size);
+	background-color: var(--uib-color);
+	border-radius: 50%;
+	filter: blur(calc(var(--uib-ring-size) * 0.25));
+	opacity: 0.5;
+	animation: ballInnerShadow var(--uib-speed) ease-in-out infinite;
+}
+
+.pl__ball-side-shadows {
+	position: absolute;
+	top: calc(50% - var(--uib-ring-size) / 2);
+	left: calc(50% - var(--uib-ring-size) / 2);
+	height: var(--uib-ring-size);
+	width: var(--uib-ring-size);
+	background-color: var(--uib-color);
+	border-radius: 50%;
+	filter: blur(calc(var(--uib-ring-size) * 0.25));
+	opacity: 0.5;
+}
+
+@keyframes ball {
+	from {
+		transform: rotate(0) translateY(-6.5em);
+	}
+	50% {
+		transform: rotate(180deg) translateY(-6em);
+	}
+	to {
+		transform: rotate(360deg) translateY(-6.5em);
+	}
+}
+
+@keyframes ballInnerShadow {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(-360deg);
+	}
+}
+
+@keyframes ballOuterShadow {
+	from {
+		transform: rotate(20deg);
+	}
+	to {
+		transform: rotate(-340deg);
+	}
+}
+
+@keyframes ballTexture {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(50%);
+	}
+}
+
+@keyframes trackCover {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }

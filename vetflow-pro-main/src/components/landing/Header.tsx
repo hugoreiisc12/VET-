@@ -56,9 +56,10 @@ const Header = () => {
 
   const navLinks = [
     { href: "#inicio", label: "Início" },
+    { href: "#servicos", label: "Serviços" },
     { href: "#sobre", label: "Sobre" },
     { href: "#depoimentos", label: "Depoimentos" },
-    { href: "#servicos", label: "Serviços" },
+    { href: "#contato", label: "Contato" },
   ];
 
   return (
@@ -66,8 +67,8 @@ const Header = () => {
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-black/90 backdrop-blur-md py-3 border-b border-white/10 opacity-100 translate-y-0"
-          : "bg-transparent py-5 opacity-0 -translate-y-3"
+          ? "bg-black/90 backdrop-blur-md py-3 border-b border-white/10"
+          : "bg-black/40 backdrop-blur-sm py-5"
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -93,11 +94,6 @@ const Header = () => {
                 </a>
               </li>
             ))}
-            <li>
-              <Button variant="accent" size="default">
-                Agendar Consulta
-              </Button>
-            </li>
           </ul>
         </nav>
 
@@ -126,8 +122,10 @@ const Header = () => {
             </li>
           ))}
           <li>
-            <Button variant="accent" size="default" className="w-full">
-              Agendar Consulta
+            <Button variant="accent" size="default" className="w-full" asChild>
+              <a href="https://wa.me/5521993453923" target="_blank" rel="noopener noreferrer">
+                Agendar Consulta
+              </a>
             </Button>
           </li>
         </ul>

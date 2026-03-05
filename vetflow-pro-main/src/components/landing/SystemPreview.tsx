@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  NotificationIcon,
+  SuccessIcon,
+  CopiedIcon,
+  EyeToggleIcon,
+  VolumeIcon
+} from "../ui/animated-state-icons";
 import { Button } from "@/components/ui/button";
 import {
-  ClipboardList,
-  Calendar,
-  FileText,
-  Bell,
-  BarChart3,
   Smartphone,
 } from "lucide-react";
 import floresta2 from "../../../lucas_reis/floresta_2.jpeg";
@@ -55,6 +57,35 @@ const SystemPreview = () => {
         duration: 1,
         ease: "power3.out",
       });
+
+      // Organic, imperfect dashboard reactions with slight distortion and inertia
+      const section = sectionRef.current;
+      if (section && mockupRef.current) {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          onUpdate: (self) => {
+            const v = self.getVelocity(); // scroll velocity
+            gsap.to(mockupRef.current, {
+              skewX: Math.max(Math.min(v * 0.005, 8), -8),
+              rotate: Math.max(Math.min(v * 0.0015, 3), -3),
+              y: Math.max(Math.min(v * 0.02, 18), -18),
+              duration: 0.3,
+              overwrite: "auto",
+            });
+            // animate filter intensity with speed for organic distortion
+            const displace = document.getElementById("dashDisplace");
+            const noise = document.getElementById("dashNoise");
+            if (displace && noise) {
+              const intensity = Math.min(Math.abs(v) * 0.06, 30);
+              gsap.to(displace, { attr: { scale: intensity }, duration: 0.3 });
+              gsap.to(noise, { attr: { baseFrequency: 0.008 + Math.min(Math.abs(v) * 0.00008, 0.015) }, duration: 0.3 });
+            }
+          },
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -62,27 +93,27 @@ const SystemPreview = () => {
 
   const features = [
     {
-      icon: ClipboardList,
+      icon: SuccessIcon,
       title: "Prontuário Digital",
       description: "Histórico completo do paciente sempre acessível",
     },
     {
-      icon: Calendar,
+      icon: EyeToggleIcon,
       title: "Agenda Inteligente",
       description: "Agendamento online com confirmação automática",
     },
     {
-      icon: FileText,
+      icon: CopiedIcon,
       title: "Receitas Digitais",
       description: "Prescrições eletrônicas seguras e práticas",
     },
     {
-      icon: Bell,
+      icon: NotificationIcon,
       title: "Lembretes Automáticos",
       description: "Vacinas, retornos e medicações no prazo",
     },
     {
-      icon: BarChart3,
+      icon: VolumeIcon,
       title: "Relatórios Completos",
       description: "Acompanhe a evolução da saúde do pet",
     },
@@ -114,6 +145,7 @@ const SystemPreview = () => {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
+      <div className="absolute inset-0 bg-black/50" />
       <div
         className="aurora-overlay"
         style={{
@@ -121,6 +153,13 @@ const SystemPreview = () => {
           ["--aurora-y" as any]: aurora.y,
         }}
       />
+      {/* Invisible SVG filter for organic distortion on dashboard */}
+      <svg style={{ position: "absolute", width: 0, height: 0 }}>
+        <filter id="dashDistort">
+          <feTurbulence id="dashNoise" type="fractalNoise" baseFrequency="0.008" numOctaves="2" seed="2" />
+          <feDisplacementMap id="dashDisplace" in="SourceGraphic" in2="dashNoise" scale="0" />
+        </filter>
+      </svg>
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 border border-primary-foreground rounded-full" />
         <div className="absolute bottom-1/4 right-1/4 w-48 h-48 border border-primary-foreground rounded-full" />
@@ -130,13 +169,13 @@ const SystemPreview = () => {
 
       <div className="container mx-auto px-4 relative z-30">
         <div ref={contentRef} className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block text-gold neon-text-yellow font-semibold text-sm uppercase tracking-wider mb-4">
+          <span className="inline-block text-gold neon-text-yellow font-semibold text-sm uppercase tracking-wider mb-4 text-outline-white">
             Sistema de Gestão
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gold neon-text-yellow mb-3">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gold neon-text-yellow text-outline-white mb-3">
             Tecnologia a serviço do <span className="text-gold neon-text-yellow">cuidado animal</span>
           </h2>
-          <p className="text-gold neon-text-yellow text-lg">
+          <p className="text-gold neon-text-yellow text-outline-white text-lg">
             Plataforma completa para gestão clínica, desenvolvida para otimizar
             atendimentos e proporcionar a melhor experiência para tutores e
             profissionais.
@@ -144,7 +183,7 @@ const SystemPreview = () => {
         </div>
 
         {/* System mockup */}
-        <div ref={mockupRef} className="relative max-w-5xl mx-auto mb-16">
+        <div ref={mockupRef} className="relative max-w-5xl mx-auto mb-16" style={{ filter: "url(#dashDistort)" }}>
           <div
             className={`rounded-3xl shadow-elevated overflow-hidden border ${
               theme === "black" ? "bg-black text-gold border-white/10" : "bg-white text-foreground border-border"
@@ -214,26 +253,35 @@ const SystemPreview = () => {
                   {/* Stats cards */}
                   <div className="grid grid-cols-3 gap-4">
                     <div className={`rounded-xl p-4 ${theme === "black" ? "bg-black border border-white/10" : "bg-sage-light"}`}>
-                      <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow" : "text-primary neon-text-green"}`}>
-                        Consultas Hoje
-                      </p>
-                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <EyeToggleIcon size={16} color={theme === "black" ? "#EAB308" : "currentColor"} />
+                        <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-primary neon-text-green"}`}>
+                          Consultas Hoje
+                        </p>
+                      </div>
+                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>
                         8
                       </p>
                     </div>
                     <div className={`rounded-xl p-4 ${theme === "black" ? "bg-black border border-white/10" : "bg-coral-light"}`}>
-                      <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow" : "text-coral-dark"}`}>
-                        Pendentes
-                      </p>
-                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <SuccessIcon size={16} color={theme === "black" ? "#EAB308" : "currentColor"} />
+                        <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-coral-dark"}`}>
+                          Pendentes
+                        </p>
+                      </div>
+                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>
                         3
                       </p>
                     </div>
                     <div className={`rounded-xl p-4 ${theme === "black" ? "bg-black border border-white/10" : "bg-secondary"}`}>
-                      <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow" : "text-muted-foreground"}`}>
-                        Esta Semana
-                      </p>
-                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <VolumeIcon size={16} color={theme === "black" ? "#EAB308" : "currentColor"} />
+                        <p className={`text-sm font-medium ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
+                          Esta Semana
+                        </p>
+                      </div>
+                      <p className={`font-display text-2xl font-bold ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>
                         42
                       </p>
                     </div>
@@ -242,7 +290,7 @@ const SystemPreview = () => {
                   {/* Table preview */}
                   <div className={`rounded-xl overflow-hidden border ${theme === "black" ? "bg-black border-white/10" : "bg-card border-border"}`}>
                     <div className={`px-6 py-4 border-b ${theme === "black" ? "border-white/10" : "border-border"}`}>
-                      <p className={`font-semibold ${theme === "black" ? "text-gold" : "text-foreground"}`}>
+                      <p className={`font-semibold ${theme === "black" ? "text-gold text-outline-white" : "text-foreground"}`}>
                         Próximas Consultas
                       </p>
                     </div>
@@ -266,28 +314,28 @@ const SystemPreview = () => {
                   {/* Como funciona */}
                   <div className="mt-8 grid md:grid-cols-2 gap-6">
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
-                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>Fluxo de Agendamento</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow" : "text-muted-foreground"}`}>
+                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Fluxo de Agendamento</p>
+                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         O tutor escolhe dia e horário online. A confirmação é automática e
                         lembretes são enviados por e-mail/WhatsApp.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
-                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>Prontuário e Receitas</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow" : "text-muted-foreground"}`}>
+                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Prontuário e Receitas</p>
+                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Histórico clínico centralizado, com receitas digitais e anexos de exames
                         disponíveis para o tutor e equipe.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
-                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>Relatórios</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow" : "text-muted-foreground"}`}>
+                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Relatórios</p>
+                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Indicadores de saúde e produtividade com gráficos e exportação para PDF/Excel.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
-                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow" : "text-foreground"}`}>Acesso Mobile</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow" : "text-muted-foreground"}`}>
+                      <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Acesso Mobile</p>
+                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Interface responsiva e app para tutores acompanharem consultas e documentos.
                       </p>
                     </div>
@@ -302,31 +350,22 @@ const SystemPreview = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
           {features.map((feature, index) => (
             <div
-              key={index}
-              className="flex items-start gap-4 p-4 rounded-xl bg-black border border-white/10 transition-colors duration-300"
-            >
-              <div className="w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center shrink-0">
-                <feature.icon className="w-5 h-5 text-gold" />
-              </div>
-              <div>
-                <p className="font-semibold text-gold neon-text-yellow">
-                  {feature.title}
-                </p>
-                <p className="text-sm text-gold neon-text-yellow">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
+                  key={index}
+                  className="flex items-start gap-4 p-4 rounded-xl bg-black border border-white/10 transition-colors duration-300"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-black border border-white/10 flex items-center justify-center shrink-0">
+                    <feature.icon className="w-5 h-5 text-gold" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gold neon-text-yellow text-outline-white">
+                      {feature.title}
+                    </p>
+                    <p className="text-sm text-gold neon-text-yellow text-outline-white">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
           ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <Button
-            size="xl"
-            className="bg-black text-gold neon-text-yellow border border-white/10 hover:bg-black/90 shadow-soft hover:shadow-medium hover:-translate-y-0.5"
-          >
-            Solicitar Demonstração
-          </Button>
         </div>
       </div>
     </section>

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Button } from "@/components/ui/button";
-import { Calendar, Shield, Award } from "lucide-react";
+import { SuccessIcon, HeartIcon } from "../ui/animated-state-icons";
+import { Calendar, Award } from "lucide-react";
 import heroVet from "@/assets/hero-vet.jpg";
 import floresta from "../../../lucas_reis/floresta.jpeg";
 
@@ -10,6 +11,7 @@ const Hero = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const smokeRef = useRef<HTMLDivElement>(null);
   const [aurora, setAurora] = useState<{ x: string; y: string }>({ x: "50%", y: "50%" });
 
   useEffect(() => {
@@ -29,19 +31,19 @@ const Hero = () => {
 
       tl.fromTo(
         contentRef.current?.querySelector("h1"),
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 1 }
+        { opacity: 0, y: 60, filter: "blur(8px)" },
+        { opacity: 1, y: 0, duration: 1, filter: "blur(0px)" }
       )
         .fromTo(
           contentRef.current?.querySelector("p"),
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 0.8 },
+          { opacity: 0, y: 40, filter: "blur(6px)" },
+          { opacity: 1, y: 0, duration: 0.8, filter: "blur(0px)" },
           "-=0.5"
         )
         .fromTo(
           contentRef.current?.querySelectorAll(".hero-buttons button"),
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, stagger: 0.15, duration: 0.6 },
+          { opacity: 0, y: 30, filter: "blur(4px)" },
+          { opacity: 1, y: 0, stagger: 0.15, duration: 0.6, filter: "blur(0px)" },
           "-=0.4"
         )
         .fromTo(
@@ -56,15 +58,29 @@ const Hero = () => {
           { opacity: 1, y: 0, stagger: 0.1, duration: 0.6 },
           "-=0.5"
         );
+
+      gsap.fromTo(
+        smokeRef.current,
+        { opacity: 0.28, y: 20 },
+        {
+          opacity: 0.08,
+          y: -10,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   const stats = [
-    { icon: Shield, value: "100%", label: "Satisfação" },
-    { icon: Award, value: "1.000+", label: "Pets Atendidos" },
-    { icon: Calendar, value: "Domiciliar", label: "Atendimento" },
+    { icon: SuccessIcon, value: "100%", label: "Satisfação" },
+    { icon: HeartIcon, value: "Domiciliar", label: "Atendimento" },
   ];
 
   return (
@@ -88,6 +104,7 @@ const Hero = () => {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
+      <div className="absolute inset-0 bg-black/50" />
       <div
         className="aurora-overlay"
         style={{
@@ -95,14 +112,15 @@ const Hero = () => {
           ["--aurora-y" as any]: aurora.y,
         }}
       />
+      <div ref={smokeRef} className="smoke-overlay" />
 
       <div className="container mx-auto px-4 py-12 relative z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div ref={contentRef} className="text-center lg:text-left">
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-gold neon-text-yellow leading-tight mb-6">
               Cuidado{" "}
-              <span className="text-primary neon-text-green">veterinário</span> com{" "}
+              <span className="text-primary neon-text-green text-outline-white">veterinário</span> com{" "}
               <span className="relative">
                 amor
                 <svg
@@ -122,7 +140,7 @@ const Hero = () => {
               e dedicação
             </h1>
 
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8">
+            <p className="text-lg sm:text-xl text-white text-outline-white max-w-xl mx-auto lg:mx-0 mb-8">
               Dr. Lucas Reis oferece atendimento veterinário domiciliar
               personalizado e humanizado para o seu pet. Cuidado profissional
               no conforto da sua casa.
@@ -132,12 +150,20 @@ const Hero = () => {
               <Button
                 size="xl"
                 className="bg-black text-gold neon-text-yellow border border-white/10 hover:bg-black/90 shadow-soft hover:shadow-medium hover:-translate-y-0.5"
+                asChild
               >
-                <Calendar className="w-5 h-5" />
-                Agendar Consulta
+                <a href="#contato">
+                  <Calendar className="w-5 h-5" />
+                  Agendar Consulta
+                </a>
               </Button>
-              <Button variant="outline" size="xl">
-                Conhecer Serviços
+              <Button
+                variant="outline"
+                size="xl"
+                className="bg-primary text-white border-primary hover:bg-primary/90 hover:text-white shadow-soft animate-jump"
+                asChild
+              >
+                <a href="#servicos">Conhecer Serviços</a>
               </Button>
             </div>
           </div>
@@ -153,36 +179,26 @@ const Hero = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
             </div>
 
-            {/* Floating card */}
-            <div className="absolute -bottom-6 -left-6 bg-black rounded-2xl p-4 shadow-elevated animate-float border border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center border border-white/10">
-                  <Shield className="w-6 h-6 text-gold" />
-                </div>
-                <div>
-                  <p className="font-semibold text-gold neon-text-yellow">CRMV Ativo</p>
-                  <p className="text-sm text-gold neon-text-yellow">SP-12345</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
         {/* Stats */}
         <div
           ref={statsRef}
-          className="grid grid-cols-3 gap-4 mt-16 max-w-3xl mx-auto"
+          className="grid grid-cols-2 gap-4 mt-16 max-w-2xl mx-auto"
         >
           {stats.map((stat, index) => (
             <div
               key={index}
               className="text-center p-6 rounded-2xl bg-black shadow-soft hover:shadow-medium transition-shadow duration-300 border border-white/10"
             >
-              <stat.icon className="w-8 h-8 text-gold mx-auto mb-3" />
-              <p className="font-display text-3xl font-bold text-gold neon-text-yellow">
+              <div className="flex justify-center mb-3">
+                <stat.icon size={32} color="#EAB308" />
+              </div>
+              <p className="font-display text-3xl font-bold text-gold neon-text-yellow text-outline-white">
                 {stat.value}
               </p>
-              <p className="text-sm text-gold neon-text-yellow">{stat.label}</p>
+              <p className="text-sm text-gold neon-text-yellow text-outline-white">{stat.label}</p>
             </div>
           ))}
         </div>

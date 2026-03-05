@@ -10,6 +10,7 @@ const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const smokeRef = useRef<HTMLDivElement>(null);
   const [aurora, setAurora] = useState<{ x: string; y: string }>({ x: "50%", y: "50%" });
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const About = () => {
         },
         opacity: 0,
         x: -80,
+        filter: "blur(8px)",
         duration: 1,
         ease: "power3.out",
       });
@@ -43,9 +45,25 @@ const About = () => {
         },
         opacity: 0,
         x: 80,
+        filter: "blur(8px)",
         duration: 1,
         ease: "power3.out",
       });
+
+      gsap.fromTo(
+        smokeRef.current,
+        { opacity: 0.24, y: 20 },
+        {
+          opacity: 0.08,
+          y: -10,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -63,7 +81,7 @@ const About = () => {
     <section
       ref={sectionRef}
       id="sobre"
-      className="py-24 relative overflow-hidden has-aurora"
+      className="py-16 sm:py-24 relative overflow-hidden has-aurora safe-bottom"
       onMouseMove={(e) => {
         const rect = sectionRef.current?.getBoundingClientRect();
         if (!rect) return;
@@ -80,6 +98,7 @@ const About = () => {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
+      <div className="absolute inset-0 bg-black/50" />
       <div
         className="aurora-overlay"
         style={{
@@ -87,6 +106,7 @@ const About = () => {
           ["--aurora-y" as any]: aurora.y,
         }}
       />
+      <div ref={smokeRef} className="smoke-overlay" />
 
       <div className="container mx-auto px-4 relative z-30">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -95,22 +115,21 @@ const About = () => {
 
           {/* Content */}
           <div ref={contentRef}>
-            <span className="inline-block text-gold neon-text-yellow font-semibold text-sm uppercase tracking-wider mb-4">
-              Sobre o Dr. Lucas
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Paixão por{" "}
-              <span className="text-primary neon-text-green">cuidar de animais</span>
-            </h2>
+            <span className="inline-block text-gold neon-text-yellow font-semibold text-sm uppercase tracking-wider mb-4 text-outline-white">
+            Sobre o Dr. Lucas
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-gold neon-text-yellow mb-6 text-outline-white">
+            Paixão por <span className="text-primary neon-text-green">cuidar de animais</span>
+          </h2>
 
-            <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+            <p className="text-white text-outline-white text-lg mb-6 leading-relaxed">
               Dr. Lucas Reis é especializado em atendimento veterinário domiciliar,
               levando cuidado profissional e carinhoso até a sua casa. Seu compromisso
               é proporcionar o melhor tratamento para seu pet no ambiente onde ele
               se sente mais confortável.
             </p>
 
-            <p className="text-muted-foreground mb-8 leading-relaxed">
+            <p className="text-white text-outline-white mb-8 leading-relaxed">
               Acredito que cada pet é único e merece atenção individualizada.
               O atendimento domiciliar reduz o estresse do animal e permite
               um acompanhamento mais próximo e personalizado.
@@ -138,7 +157,7 @@ const About = () => {
                   <Award className="w-5 h-5 text-gold" />
                 </div>
                 <div>
-                  <p className="font-display text-2xl font-bold text-gold neon-text-yellow">1000+</p>
+                  <p className="font-display text-2xl font-bold text-gold neon-text-yellow">100+</p>
                   <p className="text-sm text-gold neon-text-yellow">Pets atendidos</p>
                 </div>
               </div>

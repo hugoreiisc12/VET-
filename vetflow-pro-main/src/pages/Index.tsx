@@ -9,7 +9,8 @@ import SystemPreview from "@/components/landing/SystemPreview";
 import Testimonials from "@/components/landing/Testimonials";
 import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
-import SplashScreen from "@/components/landing/SplashScreen";
+import SplashScreenWith3D from "@/components/landing/SplashScreenWithd3D";
+import { DashboardPreview } from "@/components/landing/DashboardPreview";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -44,11 +45,18 @@ const Index = () => {
   const handleSplashComplete = () => {
     setShowSplash(false);
     setShowContent(true);
+    // Scroll para o topo quando entrar no site principal
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      {showSplash && (
+        <SplashScreenWith3D 
+          onComplete={handleSplashComplete}
+          dashboardPreview={<DashboardPreview />}
+        />
+      )}
       {showContent && (
         <main className="min-h-screen bg-background overflow-x-hidden animate-fade-in">
           <Header />
@@ -66,4 +74,3 @@ const Index = () => {
 };
 
 export default Index;
-
