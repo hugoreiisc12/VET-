@@ -109,14 +109,6 @@ const Header = () => {
                 </a>
               </li>
             ))}
-            {/* Mobile-only button at the end of scroll if space is tight */}
-            <li className="shrink-0 sm:hidden">
-              <Button variant="accent" size="sm" className="h-8 text-xs" asChild>
-                <a href="https://wa.me/5521993453923" target="_blank" rel="noopener noreferrer">
-                  Agendar
-                </a>
-              </Button>
-            </li>
           </ul>
         </nav>
       </div>

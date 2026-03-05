@@ -190,7 +190,7 @@ const SystemPreview = () => {
         </div>
 
         {/* System mockup */}
-        <div ref={mockupRef} className="relative max-w-5xl mx-auto mb-16" style={{ filter: "url(#dashDistort)" }}>
+        <div ref={mockupRef} className="relative w-full max-w-5xl mx-auto mb-16 px-2 sm:px-0" style={{ filter: "url(#dashDistort)" }}>
           <div
             className={`rounded-3xl shadow-elevated overflow-hidden border ${
               theme === "black" ? "bg-black text-gold border-white/10" : "bg-white text-foreground border-border"
@@ -198,48 +198,52 @@ const SystemPreview = () => {
           >
             {/* Browser header + Theme toggle */}
             <div
-              className={`px-6 py-4 flex items-center gap-2 border-b ${
+              className={`px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center gap-4 sm:gap-2 border-b ${
                 theme === "black" ? "bg-black/80 border-white/10" : "bg-muted border-border"
               }`}
             >
-              <div className="w-3 h-3 rounded-full bg-destructive" />
-              <div className="w-3 h-3 rounded-full bg-coral" />
-              <div className="w-3 h-3 rounded-full bg-primary" />
-              <div className="flex-1 ml-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-destructive" />
+                <div className="w-3 h-3 rounded-full bg-coral" />
+                <div className="w-3 h-3 rounded-full bg-primary" />
+              </div>
+              <div className="flex-1 w-full sm:ml-4">
                 <div
-                  className={`rounded-lg px-4 py-2 max-w-md ${
+                  className={`rounded-lg px-4 py-2 w-full max-w-md ${
                     theme === "black" ? "bg-black/50" : "bg-background"
                   }`}
                 >
-                  <span className={`text-sm ${theme === "black" ? "text-gold/80" : "text-muted-foreground"}`}>
+                  <span className={`text-xs sm:text-sm truncate block ${theme === "black" ? "text-gold/80" : "text-muted-foreground"}`}>
                     vetcare.app/dashboard
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${theme === "black" ? "text-gold/80" : "text-muted-foreground"}`}>Tema</span>
-                <Button
-                  size="sm"
-                  className={`h-8 px-3 rounded-md ${
-                    theme === "black"
-                      ? "bg-black text-gold border border-white/10"
-                      : "bg-white text-foreground border border-border"
-                  }`}
-                  onClick={() => setTheme("black")}
-                >
-                  Black
-                </Button>
-                <Button
-                  size="sm"
-                  className={`h-8 px-3 rounded-md ${
-                    theme === "white"
-                      ? "bg-white text-foreground border border-border"
-                      : "bg-black text-gold border border-white/10"
-                  }`}
-                  onClick={() => setTheme("white")}
-                >
-                  White
-                </Button>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`text-[10px] sm:text-xs ${theme === "black" ? "text-gold/80" : "text-muted-foreground"}`}>Tema</span>
+                <div className="flex gap-1">
+                  <Button
+                    size="sm"
+                    className={`h-7 px-2 text-[10px] sm:h-8 sm:px-3 sm:text-xs rounded-md ${
+                      theme === "black"
+                        ? "bg-black text-gold border border-white/10"
+                        : "bg-white text-foreground border border-border"
+                    }`}
+                    onClick={() => setTheme("black")}
+                  >
+                    Black
+                  </Button>
+                  <Button
+                    size="sm"
+                    className={`h-7 px-2 text-[10px] sm:h-8 sm:px-3 sm:text-xs rounded-md ${
+                      theme === "white"
+                        ? "bg-white text-foreground border border-border"
+                        : "bg-black text-gold border border-white/10"
+                    }`}
+                    onClick={() => setTheme("white")}
+                  >
+                    White
+                  </Button>
+                </div>
               </div>
             </div>
 

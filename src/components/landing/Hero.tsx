@@ -80,7 +80,7 @@ const Hero = () => {
 
   const stats = [
     { icon: SuccessIcon, value: "100%", label: "Satisfação" },
-    { icon: HeartIcon, value: "Domiciliar", label: "Atendimento" },
+    { icon: HeartIcon, value: "Atendimento", label: "Domiciliar" },
   ];
 
   return (
@@ -185,20 +185,20 @@ const Hero = () => {
         {/* Stats */}
         <div
           ref={statsRef}
-          className="grid grid-cols-2 gap-4 mt-16 max-w-2xl mx-auto"
+          className="grid grid-cols-2 gap-4 mt-16 max-w-2xl mx-auto px-2"
         >
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center p-6 rounded-2xl bg-black shadow-soft hover:shadow-medium transition-shadow duration-300 border border-white/10"
+              className="text-center p-4 sm:p-6 rounded-2xl bg-black shadow-soft hover:shadow-medium transition-shadow duration-300 border border-white/10 flex flex-col justify-center min-h-[140px]"
             >
-              <div className="flex justify-center mb-3">
-                <stat.icon size={32} color="#EAB308" />
+              <div className="flex justify-center mb-2">
+                <stat.icon size={28} color="#EAB308" />
               </div>
-              <p className="font-display text-3xl font-bold text-gold neon-text-yellow text-outline-white">
+              <p className="font-display text-xl sm:text-3xl font-bold text-gold neon-text-yellow text-outline-white break-words leading-tight">
                 {stat.value}
               </p>
-              <p className="text-sm text-gold neon-text-yellow text-outline-white">{stat.label}</p>
+              <p className="text-xs sm:text-sm text-gold neon-text-yellow text-outline-white mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
