@@ -75,8 +75,6 @@ const SystemPreview = () => {
 
             const v = self.getVelocity(); // scroll velocity
             gsap.to(mockupRef.current, {
-              skewX: Math.max(Math.min(v * 0.005, 8), -8),
-              rotate: Math.max(Math.min(v * 0.0015, 3), -3),
               y: Math.max(Math.min(v * 0.02, 18), -18),
               duration: 0.3,
               overwrite: "auto",

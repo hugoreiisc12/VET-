@@ -17,7 +17,7 @@ const SplashScreenWith3D = ({ onComplete, dashboardPreview }: SplashScreenProps)
   const imageRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [showScrollSection, setShowScrollSection] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Timeout de segurança
   useEffect(() => {
@@ -31,22 +31,20 @@ const SplashScreenWith3D = ({ onComplete, dashboardPreview }: SplashScreenProps)
   }, [imageLoaded]);
 
   useEffect(() => {
-    if (!imageLoaded) return;
-
-    console.log("🎬 Iniciando animação da intro!");
+    if (!imageLoaded || !isVisible) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
-          console.log("✅ Intro completa - Ativando scroll 3D");
-          setShowScrollSection(true);
+          console.log("✅ Intro completa - Chamando onComplete");
+          setIsVisible(false); // Inicia o fade-out do componente
+          setTimeout(onComplete, 500); // Sincroniza com a duração do fade-out
         },
       });
 
       // Estados iniciais
       gsap.set(imageRef.current, { opacity: 0, scale: 1.05 });
       gsap.set(logoRef.current, { opacity: 0, y: 30 });
-      gsap.set(scrollIndicatorRef.current, { opacity: 0 });
 
       // SEQUÊNCIA DA ANIMAÇÃO
       tl
@@ -67,19 +65,12 @@ const SplashScreenWith3D = ({ onComplete, dashboardPreview }: SplashScreenProps)
         }, "-=0.3")
         
         // 3. Loading circular (2.5s)
-        .to({}, { duration: 2.5 })
-        
-        // 4. Indicador de scroll aparece
-        .to(scrollIndicatorRef.current, {
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out",
-        });
+        .to({}, { duration: 2.5 });
         
     }, containerRef);
 
     return () => ctx.revert();
-  }, [imageLoaded]);
+  }, [imageLoaded, onComplete, isVisible]);
 
   return (
     <div className="relative tap-transparent">
@@ -87,10 +78,10 @@ const SplashScreenWith3D = ({ onComplete, dashboardPreview }: SplashScreenProps)
       <div
         ref={containerRef}
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black overflow-hidden ios-dvh safe-top safe-bottom"
-        style={{ 
-          opacity: showScrollSection ? 0 : 1,
-          pointerEvents: showScrollSection ? 'none' : 'auto',
-          transition: 'opacity 0.5s ease-out'
+        style={{
+          opacity: isVisible ? 1 : 0,
+          pointerEvents: isVisible ? 'auto' : 'none',
+          transition: 'opacity 0.5s ease-in-out',
         }}
       >
         {/* Imagem do tigre */}
@@ -148,53 +139,7 @@ const SplashScreenWith3D = ({ onComplete, dashboardPreview }: SplashScreenProps)
             <LoadingSpinner />
           </div>
         </div>
-
-        {/* Indicador de scroll */}
-        <div
-          ref={scrollIndicatorRef}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0"
-        >
-          <p className="text-amber-500/90 text-sm font-medium tracking-wide">
-            Role para continuar
-          </p>
-          <ChevronDown className="w-6 h-6 text-amber-500 animate-bounce" />
-        </div>
       </div>
-
-      {/* SEÇÃO 2: SCROLL 3D COM DASHBOARD */}
-      {showScrollSection && (
-        <div className="relative z-[99] bg-black safe-bottom min-h-ios-dvh">
-          <ContainerScroll
-            titleComponent={
-              <div className="flex flex-col items-center gap-4 mb-8">
-                {/* Logo pequeno no topo durante scroll */}
-                <div className="w-16 h-16 rounded-2xl bg-black/80 border border-amber-500/40 flex items-center justify-center shadow-xl">
-                  <PawPrint className="w-9 h-9 text-amber-500" />
-                </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-amber-500">
-                  Bem-vindo ao <span className="text-amber-400">Vet+</span>
-                </h1>
-                <p className="text-amber-100/80 text-lg max-w-2xl">
-                  Seu sistema completo de gestão veterinária domiciliar
-                </p>
-              </div>
-            }
-          >
-            {/* Conteúdo do dashboard que será passado como prop */}
-            {dashboardPreview}
-          </ContainerScroll>
-
-          {/* Botão para completar transição */}
-          <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]">
-            <button
-              onClick={onComplete}
-              className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-black font-semibold rounded-full shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
-            >
-              Entrar no Sistema
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
