@@ -14,17 +14,31 @@
  function useAutoToggle(interval: number) { 
    const [on, setOn] = useState(false); 
    useEffect(() => { 
-     const id = setInterval(() => setOn((v) => !v), interval); 
-     return () => clearInterval(id); 
+     let id: any;
+     const delay = Math.random() * 500;
+     const timeoutId = setTimeout(() => {
+       id = setInterval(() => setOn((v) => !v), interval);
+     }, delay);
+     
+     return () => {
+       clearTimeout(timeoutId);
+       if (id) clearInterval(id);
+     };
    }, [interval]); 
    return on; 
  } 
+
+ // Helper for optimized motion props
+ const motionProps = {
+   initial: false, // Prevent initial animation on mount to save resources
+   animate: true,
+ };
  
  /* ─── 1. LOADING → SUCCESS ─── spinner morphs into checkmark */ 
  export function SuccessIcon({ size = 40, color = "currentColor", className, duration = 2200 }: StateIconProps) { 
    const done = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.circle cx="20" cy="20" r="16" stroke={color} strokeWidth={2} 
          animate={done 
            ? { pathLength: 1, opacity: 1 } 
@@ -54,7 +68,7 @@
  export function MenuCloseIcon({ size = 40, color = "currentColor", className, duration = 2000 }: StateIconProps) { 
    const open = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.line x1="10" x2="30" stroke={color} strokeWidth={2.5} strokeLinecap="round" 
          animate={open 
            ? { y1: 20, y2: 20, rotate: 45 } 
@@ -82,7 +96,7 @@
  export function PlayPauseIcon({ size = 40, color = "currentColor", className, duration = 2400 }: StateIconProps) { 
    const playing = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <AnimatePresence mode="wait"> 
          {playing ? ( 
            <motion.g key="pause" 
@@ -113,7 +127,7 @@
  export function LockUnlockIcon({ size = 40, color = "currentColor", className, duration = 2600 }: StateIconProps) { 
    const unlocked = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <rect x="9" y="18" width="22" height="16" rx="3" stroke={color} strokeWidth={2} /> 
        <motion.path d="M14 18V13a6 6 0 0112 0v5" stroke={color} strokeWidth={2} strokeLinecap="round" 
          animate={unlocked 
@@ -133,7 +147,7 @@
  export function CopiedIcon({ size = 40, color = "currentColor", className, duration = 2200 }: StateIconProps) { 
    const copied = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <rect x="12" y="10" width="18" height="22" rx="2" stroke={color} strokeWidth={2} /> 
        <path d="M10 14h-0a2 2 0 00-2 2v18a2 2 0 002 2h14" stroke={color} strokeWidth={2} strokeLinecap="round" opacity={0.3} /> 
        <AnimatePresence mode="wait"> 
@@ -168,7 +182,7 @@
      <motion.svg viewBox="0 0 40 40" fill="none" className={cn("", className)} 
        animate={notif ? { rotate: [0, 8, -8, 6, -6, 3, 0] } : { rotate: 0 }} 
        transition={{ duration: 0.6 }} 
-       style={{ width: size, height: size, transformOrigin: "20px 6px" }}> 
+       style={{ width: size, height: size, transformOrigin: "20px 6px", willChange: "transform, opacity" }}> 
        <path d="M28 16a8 8 0 00-16 0c0 8-4 10-4 10h24s-4-2-4-10" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /> 
        <path d="M17.5 30a3 3 0 005 0" stroke={color} strokeWidth={2} strokeLinecap="round" /> 
        <motion.circle cx="28" cy="10" r="4" fill="#EF4444" 
@@ -185,7 +199,7 @@
  export function HeartIcon({ size = 40, color = "currentColor", className, duration = 2000 }: StateIconProps) { 
    const filled = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.path 
          d="M20 34s-12-7.5-12-16a7.5 7.5 0 0112-6 7.5 7.5 0 0112 6c0 8.5-12 16-12 16z" 
          stroke={filled ? "#EF4444" : color} 
@@ -203,7 +217,7 @@
  export function DownloadDoneIcon({ size = 40, color = "currentColor", className, duration = 2400 }: StateIconProps) { 
    const done = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <path d="M8 28v4a2 2 0 002 2h20a2 2 0 002-2v-4" stroke={color} strokeWidth={2} strokeLinecap="round" /> 
        <AnimatePresence mode="wait"> 
          {done ? ( 
@@ -233,7 +247,7 @@
  export function SendIcon({ size = 40, color = "currentColor", className, duration = 2600 }: StateIconProps) { 
    const sent = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.g 
          animate={sent 
            ? { x: 30, y: -30, opacity: 0, scale: 0.5 } 
@@ -251,7 +265,7 @@
  export function ToggleIcon({ size = 40, color = "currentColor", className, duration = 1800 }: StateIconProps) { 
    const on = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.rect x="5" y="13" width="30" height="14" rx="7" 
          animate={on 
            ? { fill: color, opacity: 0.2 } 
@@ -272,7 +286,7 @@
  export function EyeToggleIcon({ size = 40, color = "currentColor", className, duration = 2200 }: StateIconProps) { 
    const hidden = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <motion.path d="M4 20s6-10 16-10 16 10 16 10-6 10-16 10S4 20 4 20z" 
          stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" 
          animate={hidden ? { opacity: 0.3 } : { opacity: 1 }} 
@@ -294,7 +308,7 @@
  export function VolumeIcon({ size = 40, color = "currentColor", className, duration = 2400 }: StateIconProps) { 
    const muted = useAutoToggle(duration); 
    return ( 
-     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size }}> 
+     <svg viewBox="0 0 40 40" fill="none" className={cn("", className)} style={{ width: size, height: size, willChange: "transform, opacity" }}> 
        <path d="M8 16h5l7-6v20l-7-6H8a1 1 0 01-1-1V17a1 1 0 011-1z" stroke={color} strokeWidth={2} strokeLinejoin="round" /> 
        <motion.path d="M26 14a8 8 0 010 12" stroke={color} strokeWidth={2} strokeLinecap="round" 
          animate={muted ? { opacity: 0, x: -3 } : { opacity: 1, x: 0 }} 

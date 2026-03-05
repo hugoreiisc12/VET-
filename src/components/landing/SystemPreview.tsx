@@ -29,11 +29,14 @@ const SystemPreview = () => {
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
     if (prefersReducedMotion) {
       return;
     }
 
     const ctx = gsap.context(() => {
+      // ... (existing content animations)
       gsap.from(contentRef.current, {
         scrollTrigger: {
           trigger: contentRef.current,
@@ -58,7 +61,7 @@ const SystemPreview = () => {
         ease: "power3.out",
       });
 
-      // Organic, imperfect dashboard reactions with slight distortion and inertia
+      // Organic reactions - Optimized for mobile
       const section = sectionRef.current;
       if (section && mockupRef.current) {
         ScrollTrigger.create({
@@ -67,6 +70,9 @@ const SystemPreview = () => {
           end: "bottom top",
           scrub: true,
           onUpdate: (self) => {
+            // Disable heavy updates on mobile to prevent stuttering
+            if (isMobile) return;
+
             const v = self.getVelocity(); // scroll velocity
             gsap.to(mockupRef.current, {
               skewX: Math.max(Math.min(v * 0.005, 8), -8),
@@ -75,6 +81,7 @@ const SystemPreview = () => {
               duration: 0.3,
               overwrite: "auto",
             });
+            
             // animate filter intensity with speed for organic distortion
             const displace = document.getElementById("dashDisplace");
             const noise = document.getElementById("dashNoise");
