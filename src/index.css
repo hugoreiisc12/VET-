@@ -420,6 +420,21 @@
     transform: translateY(20px);
     will-change: opacity, filter, transform;
   }
+
+  /* Scrollbar Hide Utility */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Fade Mask for horizontal scroll */
+  .mask-fade-right {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
 }
 
 /* Snowball Loading Spinner */

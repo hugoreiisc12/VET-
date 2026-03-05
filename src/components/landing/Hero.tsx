@@ -117,11 +117,11 @@ const Hero = () => {
       <div className="container mx-auto px-4 py-12 relative z-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
-          <div ref={contentRef} className="text-center lg:text-left">
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-gold neon-text-yellow leading-tight mb-6">
+          <div ref={contentRef} className="text-center lg:text-left px-2 sm:px-0">
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-gold neon-text-yellow leading-tight mb-6 break-words">
               Cuidado{" "}
               <span className="text-primary neon-text-green text-outline-white">veterinário</span> com{" "}
-              <span className="relative">
+              <span className="relative inline-block sm:inline">
                 amor
                 <svg
                   className="absolute -bottom-2 left-0 w-full"
@@ -140,13 +140,13 @@ const Hero = () => {
               e dedicação
             </h1>
 
-            <p className="text-lg sm:text-xl text-white text-outline-white max-w-xl mx-auto lg:mx-0 mb-8">
+            <p className="text-lg sm:text-xl text-white text-outline-white max-w-xl mx-auto lg:mx-0 mb-8 px-4 sm:px-0">
               Dr. Lucas Reis oferece atendimento veterinário domiciliar
               personalizado e humanizado para o seu pet. Cuidado profissional
               no conforto da sua casa.
             </p>
 
-            <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-6 sm:px-0">
               <Button
                 size="xl"
                 className="bg-black text-gold neon-text-yellow border border-white/10 hover:bg-black/90 shadow-soft hover:shadow-medium hover:-translate-y-0.5"

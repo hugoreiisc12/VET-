@@ -244,10 +244,10 @@ const SystemPreview = () => {
             </div>
 
             {/* Dashboard mockup */}
-            <div className={`p-8 min-h-[400px] ${theme === "black" ? "bg-black" : "bg-white"}`}>
-              <div className="grid grid-cols-12 gap-6">
+            <div className={`p-4 sm:p-8 min-h-[300px] sm:min-h-[400px] ${theme === "black" ? "bg-black" : "bg-white"}`}>
+              <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6">
                 {/* Sidebar */}
-                <div className="col-span-3 space-y-4">
+                <div className="hidden lg:block lg:col-span-3 space-y-4">
                   <div className={`h-12 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-primary/10"} rounded-xl animate-pulse`} />
                   <div className={`h-10 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-muted"} rounded-lg`} />
                   <div className={`h-10 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-sage-light"} rounded-lg`} />
@@ -256,9 +256,9 @@ const SystemPreview = () => {
                 </div>
 
                 {/* Main content */}
-                <div className="col-span-9 space-y-6">
+                <div className="flex-1 lg:col-span-9 space-y-6">
                   {/* Stats cards */}
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className={`rounded-xl p-4 ${theme === "black" ? "bg-black border border-white/10" : "bg-sage-light"}`}>
                       <div className="flex items-center gap-2 mb-1">
                         <EyeToggleIcon size={16} color={theme === "black" ? "#EAB308" : "currentColor"} />
@@ -296,7 +296,7 @@ const SystemPreview = () => {
 
                   {/* Table preview */}
                   <div className={`rounded-xl overflow-hidden border ${theme === "black" ? "bg-black border-white/10" : "bg-card border-border"}`}>
-                    <div className={`px-6 py-4 border-b ${theme === "black" ? "border-white/10" : "border-border"}`}>
+                    <div className={`px-4 sm:px-6 py-4 border-b ${theme === "black" ? "border-white/10" : "border-border"}`}>
                       <p className={`font-semibold ${theme === "black" ? "text-gold text-outline-white" : "text-foreground"}`}>
                         Próximas Consultas
                       </p>
@@ -305,44 +305,44 @@ const SystemPreview = () => {
                       {[1, 2, 3].map((i) => (
                         <div
                           key={i}
-                          className="px-6 py-4 flex items-center gap-4"
+                          className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-4"
                         >
-                          <div className={`w-10 h-10 rounded-full ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-muted"}`} />
-                          <div className="flex-1">
-                            <div className={`h-4 rounded w-32 mb-2 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-muted"}`} />
-                            <div className={`h-3 rounded w-24 ${theme === "black" ? "bg-black/40 border border-white/10" : "bg-muted/50"}`} />
+                          <div className={`w-10 h-10 rounded-full shrink-0 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-muted"}`} />
+                          <div className="flex-1 min-w-0">
+                            <div className={`h-4 rounded w-full sm:w-32 mb-2 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-muted"}`} />
+                            <div className={`h-3 rounded w-2/3 sm:w-24 ${theme === "black" ? "bg-black/40 border border-white/10" : "bg-muted/50"}`} />
                           </div>
-                          <div className={`h-8 rounded-lg w-20 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-sage-light"}`} />
+                          <div className={`h-8 rounded-lg w-full sm:w-20 shrink-0 ${theme === "black" ? "bg-black/60 border border-white/10" : "bg-sage-light"}`} />
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Como funciona */}
-                  <div className="mt-8 grid md:grid-cols-2 gap-6">
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
                       <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Fluxo de Agendamento</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
+                      <p className={`text-sm sm:text-base ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         O tutor escolhe dia e horário online. A confirmação é automática e
                         lembretes são enviados por e-mail/WhatsApp.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
                       <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Prontuário e Receitas</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
+                      <p className={`text-sm sm:text-base ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Histórico clínico centralizado, com receitas digitais e anexos de exames
                         disponíveis para o tutor e equipe.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
                       <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Relatórios</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
+                      <p className={`text-sm sm:text-base ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Indicadores de saúde e produtividade com gráficos e exportação para PDF/Excel.
                       </p>
                     </div>
                     <div className={`p-4 rounded-xl border ${theme === "black" ? "bg-black border-white/10" : "bg-white border-border"}`}>
                       <p className={`font-semibold mb-2 ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-foreground"}`}>Acesso Mobile</p>
-                      <p className={`${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
+                      <p className={`text-sm sm:text-base ${theme === "black" ? "text-gold neon-text-yellow text-outline-white" : "text-muted-foreground"}`}>
                         Interface responsiva e app para tutores acompanharem consultas e documentos.
                       </p>
                     </div>

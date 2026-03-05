@@ -174,7 +174,7 @@ const Contact = () => {
           {/* Form */}
           <form
             ref={formRef}
-            className="bg-black p-8 rounded-3xl shadow-soft border border-white/10"
+            className="bg-black p-6 sm:p-8 rounded-3xl shadow-soft border border-white/10"
             onSubmit={handleSubmit}
           >
             <h3 className="font-display text-2xl font-semibold text-gold neon-text-yellow mb-6">
